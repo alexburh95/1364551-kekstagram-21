@@ -54,9 +54,9 @@ const getRandomArray = (name, comment) => {
   const randomArray = [];
   for (let i = 1; i < NUMBER_OF_DESCRIPTIONS; i++) {
     randomArray.push({
-      url: "photos/" + i + ".jpg",
+      url: `photos/` + i + `.jpg`,
       likes: getRandomIntInclusive(15, 200),
-      description: "Лучшее фото на Земле",
+      description: `Лучшее фото на Земле`,
       comments: [
         {
           avatar: `img/avatar-` + getRandomIntInclusive(1, 6) + `.svg`,
@@ -73,13 +73,10 @@ const getRandomArray = (name, comment) => {
 const renderComments = (array) => {
   const commentElement = similarPictureTemplate.cloneNode(true);
 
-  commentElement.querySelector(`.picture__img`).src =
-  array.url;
+  commentElement.querySelector(`.picture__img`).src = array.url;
 
-  commentElement.querySelector(`.picture__likes`).textContent =
-  array.likes;
-  commentElement.querySelector(`.picture__comments`).textContent =
-  getRandomIntInclusive(0,COMMENTS.length);
+  commentElement.querySelector(`.picture__likes`).textContent = array.likes;
+  commentElement.querySelector(`.picture__comments`).textContent = getRandomIntInclusive(0, COMMENTS.length);
 
   return commentElement;
 };
@@ -90,10 +87,8 @@ const getSetting = () => {
 
   array.forEach((item) => {
     fragment.appendChild(renderComments(item));
-
   });
 
   similarListElement.appendChild(fragment);
 };
 getSetting();
-
