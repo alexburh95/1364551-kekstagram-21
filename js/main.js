@@ -1,5 +1,9 @@
 "use strict";
 const NUMBER_OF_DESCRIPTIONS = 26;
+const MIN_LIKES = 15;
+const MAX_LIKES = 200;
+const FIRST_AVATAR = 1;
+const LAST_AVATAR = 6;
 const NAME = [
   `Иван`,
   `Хуан Себастьян`,
@@ -46,7 +50,7 @@ const getRandomIntInclusive = (min, max) => {
 };
 
 const getRandomValue = (array) => {
-  let random = Math.floor(Math.random() * array.length);
+  const random = Math.floor(Math.random() * array.length);
   return array[random];
 };
 
@@ -54,12 +58,15 @@ const getRandomArray = (name, comment) => {
   const randomArray = [];
   for (let i = 1; i < NUMBER_OF_DESCRIPTIONS; i++) {
     randomArray.push({
-      url: `photos/` + i + `.jpg`,
-      likes: getRandomIntInclusive(15, 200),
+      url: `photos/${i}.jpg`,
+      likes: getRandomIntInclusive(MIN_LIKES, MAX_LIKES),
       description: `Лучшее фото на Земле`,
       comments: [
         {
-          avatar: `img/avatar-` + getRandomIntInclusive(1, 6) + `.svg`,
+          avatar: `img/avatar-${getRandomIntInclusive(
+            FIRST_AVATAR,
+            LAST_AVATAR
+          )}.svg`,
           message: getRandomValue(comment),
           name: getRandomValue(name),
         },
@@ -70,22 +77,24 @@ const getRandomArray = (name, comment) => {
   return randomArray;
 };
 
-const renderComments = (array) => {
+const renderComments = (object) => {
   const commentElement = similarPictureTemplate.cloneNode(true);
 
-  commentElement.querySelector(`.picture__img`).src = array.url;
+  commentElement.querySelector(`.picture__img`).src = object.url;
 
-  commentElement.querySelector(`.picture__likes`).textContent = array.likes;
-  commentElement.querySelector(`.picture__comments`).textContent = getRandomIntInclusive(0, COMMENTS.length);
+  commentElement.querySelector(`.picture__likes`).textContent = object.likes;
+  commentElement.querySelector(
+    `.picture__comments`
+  ).textContent = getRandomIntInclusive(0, COMMENTS.length);
 
   return commentElement;
 };
 
 const getSetting = () => {
   const fragment = document.createDocumentFragment();
-  const array = getRandomArray(NAME, COMMENTS);
+  const arrayOfObjects = getRandomArray(NAME, COMMENTS);
 
-  array.forEach((item) => {
+  arrayOfObjects.forEach((item) => {
     fragment.appendChild(renderComments(item));
   });
 
