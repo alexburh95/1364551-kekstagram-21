@@ -101,3 +101,122 @@ const getSetting = () => {
   similarListElement.appendChild(fragment);
 };
 getSetting();
+
+//4 модуль
+
+const uploadFile = document.querySelector(`#upload-file`);
+const uploadImg = document.querySelector(`.img-upload__overlay`);
+const body = document.querySelector("body");
+const cancelWindow = document.querySelector(`#upload-cancel`);
+
+const onWindowEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeWindow();
+  }
+};
+
+const openWindow = () => {
+  uploadImg.classList.remove("hidden");
+  body.classList.add(`modal-open`);
+  document.addEventListener(`keydown`, onWindowEscPress);
+};
+
+const closeWindow = () => {
+  uploadImg.classList.add("hidden");
+  uploadFile.value = "";
+
+  body.classList.remove("modal-open");
+  document.removeEventListener(`keydown`, onWindowEscPress);
+};
+uploadFile.addEventListener("change", function () {
+  openWindow();
+});
+cancelWindow.addEventListener("click", function () {
+  closeWindow();
+});
+
+const slider = document.querySelector(`.effect-level__pin`);
+const img = document.querySelector(`.img-upload__preview`);
+const barWidth = document.querySelector(`.effect-level__line`);
+
+const getSaturation = (elementLeft, elementWidth) => {
+  const left = getComputedStyle(elementLeft).left;
+  const width = getComputedStyle(elementWidth).width;
+  const saturation = Math.round(
+    (left.split("px")[0] * 100) / width.split("px")[0]
+  );
+
+  return saturation;
+};
+
+const sliderHandler = () => {
+  getSaturation(slider, barWidth);
+};
+
+slider.addEventListener("mouseup", sliderHandler);
+
+const hastagInput = document.querySelector(`.text__hashtags`);
+const regular = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
+const space = " ";
+const MIN_HASHTAG_LENGTH = 2;
+const MAX_HASHTAG_LENGTH = 20;
+const MAX_ARRAY_LENGTH = 5;
+
+const inputValue = hastagInput.value;
+
+const checkInput = (array) => {
+  if (array.length > MAX_ARRAY_LENGTH) {
+    hastagInput.setCustomValidity(`Максимальное количество хештегов: 5`);
+    return;
+  }
+
+  for (let i = 0; i < array.length; i++) {
+    let element = array[i];
+    const valueLength = element.length;
+    hastagInput.setCustomValidity(``);
+    if (valueLength < MIN_HASHTAG_LENGTH) {
+      hastagInput.setCustomValidity(
+        `Ещё  ${MIN_HASHTAG_LENGTH - valueLength} симв.`
+      );
+      break;
+    } else if (valueLength > MAX_HASHTAG_LENGTH) {
+      hastagInput.setCustomValidity(
+        `Удалите лишние ${valueLength - MAX_HASHTAG_LENGTH} симв.`
+      );
+      break;
+    } else if (regular.test(element) === false) {
+      hastagInput.setCustomValidity(
+        `Ошибка заполнения. Можно использовать только буквы и цифры`
+      );
+      break;
+    } else if (array.length > 1) {
+      for (let i = 0; i < array.length - 1; i++) {
+        for (let j = i + 1; j < array.length; j++) {
+          let item = array[j].toLowerCase();
+          if ((array[i].toLowerCase() === item) === true) {
+            hastagInput.setCustomValidity(
+              `Нельзя использовать одинаковые хештеги`
+            );
+            break;
+          }
+        }
+      }
+    } else {
+      hastagInput.setCustomValidity("");
+    }
+  }
+  hastagInput.reportValidity();
+};
+hastagInputHandler = () => {
+  const inputArray = hastagInput.value.split(space);
+  checkInput(inputArray);
+};
+hastagInput.addEventListener("input", hastagInputHandler);
+
+hastagInput.addEventListener("focus", () => {
+  document.removeEventListener(`keydown`, onWindowEscPress);
+});
+hastagInput.addEventListener("blur", () => {
+  document.addEventListener(`keydown`, onWindowEscPress);
+});
