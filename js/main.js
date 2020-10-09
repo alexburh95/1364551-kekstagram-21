@@ -103,36 +103,39 @@ const getSetting = () => {
 getSetting();
 
 //4 модуль
-
+const KEYS = {
+  ENTER: `Enter`,
+  ESCAPE: `Escape`,
+};
 const uploadFile = document.querySelector(`#upload-file`);
 const uploadImg = document.querySelector(`.img-upload__overlay`);
-const body = document.querySelector("body");
+const body = document.querySelector(`body`);
 const cancelWindow = document.querySelector(`#upload-cancel`);
 
 const onWindowEscPress = (evt) => {
-  if (evt.key === `Escape`) {
+  if (evt.key === KEYS.ESCAPE) {
     evt.preventDefault();
     closeWindow();
   }
 };
 
 const openWindow = () => {
-  uploadImg.classList.remove("hidden");
+  uploadImg.classList.remove(`hidden`);
   body.classList.add(`modal-open`);
   document.addEventListener(`keydown`, onWindowEscPress);
 };
 
 const closeWindow = () => {
-  uploadImg.classList.add("hidden");
+  uploadImg.classList.add(`hidden`);
   uploadFile.value = "";
 
-  body.classList.remove("modal-open");
+  body.classList.remove(`modal-open`);
   document.removeEventListener(`keydown`, onWindowEscPress);
 };
-uploadFile.addEventListener("change", function () {
+uploadFile.addEventListener(`change`, function () {
   openWindow();
 });
-cancelWindow.addEventListener("click", function () {
+cancelWindow.addEventListener(`click`, function () {
   closeWindow();
 });
 
@@ -141,11 +144,9 @@ const img = document.querySelector(`.img-upload__preview`);
 const barWidth = document.querySelector(`.effect-level__line`);
 
 const getSaturation = (elementLeft, elementWidth) => {
-  const left = getComputedStyle(elementLeft).left;
-  const width = getComputedStyle(elementWidth).width;
-  const saturation = Math.round(
-    (left.split("px")[0] * 100) / width.split("px")[0]
-  );
+  const left = elementLeft.offsetLeft;
+  const width = elementWidth.clientWidth;
+  const saturation = Math.round((left * 100) / width);
 
   return saturation;
 };
@@ -154,7 +155,7 @@ const sliderHandler = () => {
   getSaturation(slider, barWidth);
 };
 
-slider.addEventListener("mouseup", sliderHandler);
+slider.addEventListener(`mouseup`, sliderHandler);
 
 const hastagInput = document.querySelector(`.text__hashtags`);
 const regular = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
@@ -191,32 +192,27 @@ const checkInput = (array) => {
       );
       break;
     } else if (array.length > 1) {
-      for (let i = 0; i < array.length - 1; i++) {
-        for (let j = i + 1; j < array.length; j++) {
-          let item = array[j].toLowerCase();
-          if ((array[i].toLowerCase() === item) === true) {
-            hastagInput.setCustomValidity(
-              `Нельзя использовать одинаковые хештеги`
-            );
-            break;
-          }
-        }
+      const hasDuplicates = (arr) =>
+        arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
+      if (hasDuplicates(array) === true) {
+        hastagInput.setCustomValidity(`Нельзя использовать одинаковые хештеги`);
+        break;
       }
     } else {
-      hastagInput.setCustomValidity("");
+      hastagInput.setCustomValidity(``);
     }
   }
   hastagInput.reportValidity();
 };
-hastagInputHandler = () => {
+const hastagInputHandler = () => {
   const inputArray = hastagInput.value.split(space);
   checkInput(inputArray);
 };
-hastagInput.addEventListener("input", hastagInputHandler);
+hastagInput.addEventListener(`input`, hastagInputHandler);
 
-hastagInput.addEventListener("focus", () => {
+hastagInput.addEventListener(`focus`, () => {
   document.removeEventListener(`keydown`, onWindowEscPress);
 });
-hastagInput.addEventListener("blur", () => {
+hastagInput.addEventListener(`blur`, () => {
   document.addEventListener(`keydown`, onWindowEscPress);
 });
