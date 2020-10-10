@@ -114,7 +114,6 @@ const cancelWindow = document.querySelector(`#upload-cancel`);
 
 const onWindowEscPress = (evt) => {
   if (evt.key === KEYS.ESCAPE) {
-    evt.preventDefault();
     closeWindow();
   }
 };
@@ -174,6 +173,7 @@ const checkInput = (array) => {
 
   for (let i = 0; i < array.length; i++) {
     let element = array[i];
+
     const valueLength = element.length;
     hastagInput.setCustomValidity(``);
     if (valueLength < MIN_HASHTAG_LENGTH) {
@@ -194,6 +194,7 @@ const checkInput = (array) => {
     } else if (array.length > 1) {
       const hasDuplicates = (arr) =>
         arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
+
       if (hasDuplicates(array) === true) {
         hastagInput.setCustomValidity(`Нельзя использовать одинаковые хештеги`);
         break;
@@ -205,7 +206,7 @@ const checkInput = (array) => {
   hastagInput.reportValidity();
 };
 const hastagInputHandler = () => {
-  const inputArray = hastagInput.value.split(space);
+  const inputArray = hastagInput.value.toLowerCase().split(space);
   checkInput(inputArray);
 };
 hastagInput.addEventListener(`input`, hastagInputHandler);
