@@ -14,15 +14,15 @@
   const openWindow = () => {
     uploadImg.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
-    document.addEventListener(`keydown`, onWindowEscPress);
+    document.addEventListener(`keydown`, window.onWindowEscPress);
   };
 
   const closeWindow = () => {
     uploadImg.classList.add(`hidden`);
-    uploadFile.value = "";
+    uploadFile.value = ``;
 
     body.classList.remove(`modal-open`);
-    document.removeEventListener(`keydown`, onWindowEscPress);
+    document.removeEventListener(`keydown`, window.onWindowEscPress);
   };
   uploadFile.addEventListener(`change`, function () {
     openWindow();

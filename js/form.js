@@ -19,12 +19,10 @@
 
   const hastagInput = document.querySelector(`.text__hashtags`);
   const regular = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
-  const space = " ";
+  const space = ` `;
   const MIN_HASHTAG_LENGTH = 2;
   const MAX_HASHTAG_LENGTH = 20;
   const MAX_ARRAY_LENGTH = 5;
-
-  const inputValue = hastagInput.value;
 
   const checkInput = (array) => {
     if (array.length > MAX_ARRAY_LENGTH) {
@@ -39,17 +37,17 @@
       hastagInput.setCustomValidity(``);
       if (valueLength < MIN_HASHTAG_LENGTH) {
         hastagInput.setCustomValidity(
-          `Ещё  ${MIN_HASHTAG_LENGTH - valueLength} симв.`
+            `Ещё  ${MIN_HASHTAG_LENGTH - valueLength} симв.`
         );
         break;
       } else if (valueLength > MAX_HASHTAG_LENGTH) {
         hastagInput.setCustomValidity(
-          `Удалите лишние ${valueLength - MAX_HASHTAG_LENGTH} симв.`
+            `Удалите лишние ${valueLength - MAX_HASHTAG_LENGTH} симв.`
         );
         break;
       } else if (regular.test(element) === false) {
         hastagInput.setCustomValidity(
-          `Ошибка заполнения. Можно использовать только буквы и цифры`
+            `Ошибка заполнения. Можно использовать только буквы и цифры`
         );
         break;
       } else if (array.length > 1) {
@@ -58,7 +56,7 @@
 
         if (hasDuplicates(array) === true) {
           hastagInput.setCustomValidity(
-            `Нельзя использовать одинаковые хештеги`
+              `Нельзя использовать одинаковые хештеги`
           );
           break;
         }

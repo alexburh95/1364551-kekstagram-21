@@ -19,8 +19,8 @@
         comments: [
           {
             avatar: `img/avatar-${window.getRandomIntInclusive(
-              FIRST_AVATAR,
-              LAST_AVATAR
+                FIRST_AVATAR,
+                LAST_AVATAR
             )}.svg`,
             message: window.getRandomValue(comment),
             name: window.getRandomValue(name),
@@ -39,7 +39,7 @@
 
     commentElement.querySelector(`.picture__likes`).textContent = object.likes;
     commentElement.querySelector(
-      `.picture__comments`
+        `.picture__comments`
     ).textContent = window.getRandomIntInclusive(0, window.COMMENTS.length);
 
     return commentElement;
