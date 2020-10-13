@@ -24,10 +24,10 @@
     body.classList.remove(`modal-open`);
     document.removeEventListener(`keydown`, window.onWindowEscPress);
   };
-  uploadFile.addEventListener(`change`, function () {
+  uploadFile.addEventListener(`change`, () => {
     openWindow();
   });
-  cancelWindow.addEventListener(`click`, function () {
+  cancelWindow.addEventListener(`click`, () => {
     closeWindow();
   });
 })();
