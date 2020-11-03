@@ -31,7 +31,7 @@
     });
   };
   const getSetting = (array) => {
-    sortedArray = array;
+    sortedArray = [...array];
 
     array.forEach((item) => {
       fragment.appendChild(renderComments(item));
@@ -41,7 +41,7 @@
   };
   const sameArrays = {
     all: [],
-    randomm: [],
+    random: [],
   };
 
   const slashImages = function () {
@@ -50,8 +50,7 @@
 
   const mostPopularHandler = window.debounce(() => {
     getCleanContent();
-    sortedArray = sameArrays.all;
-    let popular = [...sortedArray];
+    const popular = [...sameArrays.all];
     popular.sort((a, b) => {
       return b.comments.length - a.comments.length;
     });
@@ -59,6 +58,8 @@
 
     slashImages();
   });
+
+
   mostPopular.addEventListener(`click`, mostPopularHandler);
 
   const defaultHandler = window.debounce(() => {
@@ -72,17 +73,17 @@
 
   const randomHandler = window.debounce(() => {
     sortedArray = sameArrays.all;
-    sameArrays.randomm = [];
+    sameArrays.random = [];
     getCleanContent();
 
-    while (sameArrays.randomm.length < RANDOM_NUMBER) {
+    while (sameArrays.random.length < RANDOM_NUMBER) {
       let item = window.getRandomValue(sortedArray);
-      if (!sameArrays.randomm.includes(item)) {
-        sameArrays.randomm.push(item);
+      if (!sameArrays.random.includes(item)) {
+        sameArrays.random.push(item);
       }
     }
 
-    sortedArray = sameArrays.randomm;
+    sortedArray = sameArrays.random;
 
     slashImages();
   });

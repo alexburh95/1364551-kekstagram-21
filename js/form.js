@@ -23,8 +23,8 @@
   const MIN_HASHTAG_LENGTH = 2;
   const MAX_HASHTAG_LENGTH = 20;
   const MAX_ARRAY_LENGTH = 5;
-  window.hasDuplicates = (arr) =>
-          arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
+  const hasDuplicates = (arr) =>
+    arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
   const checkInput = (array) => {
     if (array.length > MAX_ARRAY_LENGTH) {
       hastagInput.setCustomValidity(`Максимальное количество хештегов: 5`);
@@ -54,7 +54,7 @@
       } else if (array.length > 1) {
 
 
-        if (window.hasDuplicates(array) === true) {
+        if (hasDuplicates(array) === true) {
           hastagInput.setCustomValidity(
               `Нельзя использовать одинаковые хештеги`
           );
