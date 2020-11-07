@@ -1,5 +1,7 @@
 'use strict';
 (function () {
+  const COMENT_IMG_SIZE = 35;
+
   const bigPicture = document.querySelector(`.big-picture`);
   const RANDOM_NUMBER = 10;
   const galleryFilter = document.querySelector(`.img-filters`);
@@ -32,7 +34,8 @@
 
     const comments = object.comments;
 
-    const commentsContainer = bigPicture.getElementsByClassName(`social__comments`)[0];
+    const commentsContainer = bigPicture.querySelector(`.social__comments`);
+    let liFragment = document.createDocumentFragment();
     commentsContainer.innerHTML = ``;
     comments.forEach((comment) => {
       const li = document.createElement(`li`);
@@ -41,15 +44,18 @@
       avatar.classList.add(`social__picture`);
       avatar.src = comment.avatar;
       avatar.alt = comment.name;
-      avatar.width = 35;
-      avatar.height = 35;
+      avatar.width = COMENT_IMG_SIZE;
+      avatar.height = COMENT_IMG_SIZE;
       const commentText = document.createElement(`p`);
       commentText.classList.add(`social__text`);
       commentText.textContent = comment.message;
       li.appendChild(avatar);
       li.appendChild(commentText);
-      commentsContainer.appendChild(li);
+      liFragment.appendChild(li);
+
     });
+
+    commentsContainer.appendChild(liFragment);
 
     bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
     bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
