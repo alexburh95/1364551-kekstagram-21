@@ -1,5 +1,5 @@
-'use strict';
-(function () {
+'use strict'
+;(function () {
   const COMENT_IMG_SIZE = 35;
 
   const bigPicture = document.querySelector(`.big-picture`);
@@ -21,6 +21,7 @@
 
     return commentElement;
   };
+
 
   // 3.2
 
@@ -52,18 +53,38 @@
       li.appendChild(avatar);
       li.appendChild(commentText);
       liFragment.appendChild(li);
-
     });
 
     commentsContainer.appendChild(liFragment);
 
-    bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
+    bigPicture
+            .querySelector(`.social__comment-count`)
+            .classList.add(`hidden`);
     bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
     document.body.classList.add(`modal-open`);
+    bigPicture.classList.remove(`hidden`);
+    document.addEventListener(`keydown`, window.onWindowEscPress);
+  };
 
+  // 4.2
+
+  const closeBigPictureBtn = document.querySelector(`.big-picture__cancel`);
+  window.closeBigPicture = () => {
+    bigPicture.classList.add(`hidden`);
+    document.body.classList.remove(`modal-open`);
 
   };
-  bigPicture.classList.remove(`hidden`);
+  const openBigPicture = (data) =>{
+    let miniture = document.querySelectorAll(`.picture`);
+    miniture = Array.from(miniture);
+    miniture.forEach((item) => {
+      item.addEventListener(`click`, () => {
+        makeBigPicture(data[miniture.indexOf(item)]);
+      });
+    });
+  };
+  closeBigPictureBtn.addEventListener(`click`, window.closeBigPicture);
+
 
   let sortedArray = [];
   const random = document.querySelector(`#filter-random`);
@@ -95,7 +116,9 @@
   const slashImages = function () {
     getSetting(sortedArray);
   };
-
+  const openMiniaturies = ()=>{
+    openBigPicture(sortedArray);
+  };
   const mostPopularHandler = window.debounce(() => {
     getCleanContent();
     const popular = [...sameArrays.all];
@@ -105,6 +128,7 @@
     sortedArray = popular;
 
     slashImages();
+    openMiniaturies();
   });
 
   mostPopular.addEventListener(`click`, mostPopularHandler);
@@ -114,6 +138,7 @@
 
     sortedArray = sameArrays.all;
     slashImages();
+    openMiniaturies();
   });
 
   defaults.addEventListener(`click`, defaultHandler);
@@ -133,6 +158,7 @@
     sortedArray = sameArrays.random;
 
     slashImages();
+    openMiniaturies();
   });
 
   random.addEventListener(`click`, randomHandler);
@@ -141,9 +167,7 @@
     sortedArray = data;
     sameArrays.all = data;
     slashImages();
-
-
-    makeBigPicture(sameArrays.all[0]);
+    openMiniaturies();
   };
 
   window.backend.load(successHandler, window.errorHandler);
