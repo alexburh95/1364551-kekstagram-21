@@ -8,7 +8,7 @@
   window.onWindowEscPress = (evt) => {
     if (evt.key === window.KEYS.ESCAPE) {
       closeWindow();
-      window.closeBigPicture();
+      window.gallery.closeBigPicture();
     }
   };
 

@@ -69,17 +69,17 @@
   // 4.2
 
   const closeBigPictureBtn = document.querySelector(`.big-picture__cancel`);
-  window.closeBigPicture = () => {
-    bigPicture.classList.add(`hidden`);
-    document.body.classList.remove(`modal-open`);
-
-  };
+  window.gallery = {
+    closeBigPicture: () => {
+      bigPicture.classList.add(`hidden`);
+      document.body.classList.remove(`modal-open`);
+    }};
   const openBigPicture = (data) =>{
     let miniture = document.querySelectorAll(`.picture`);
     miniture = Array.from(miniture);
-    miniture.forEach((item) => {
+    miniture.forEach((item, index) => {
       item.addEventListener(`click`, () => {
-        makeBigPicture(data[miniture.indexOf(item)]);
+        makeBigPicture(data[index]);
       });
     });
   };
