@@ -74,10 +74,10 @@
   hastagInput.addEventListener(`input`, hastagInputHandler);
 
   hastagInput.addEventListener(`focus`, () => {
-    document.removeEventListener(`keydown`, window.onWindowEscPress);
+    document.removeEventListener(`keydown`, window.preview.onWindowEscPress);
   });
   hastagInput.addEventListener(`blur`, () => {
-    document.addEventListener(`keydown`, window.onWindowEscPress);
+    document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   });
 
   const comments = document.querySelector(`.text__description`);
@@ -93,10 +93,10 @@
   };
   comments.addEventListener(`input`, checkInputComment);
   comments.addEventListener(`focus`, () => {
-    document.removeEventListener(`keydown`, window.onWindowEscPress);
+    document.removeEventListener(`keydown`, window.preview.onWindowEscPress);
   });
   comments.addEventListener(`blur`, () => {
-    document.addEventListener(`keydown`, window.onWindowEscPress);
+    document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   });
 
 
