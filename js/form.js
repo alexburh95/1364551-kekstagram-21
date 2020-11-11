@@ -77,7 +77,7 @@
   });
   comments.addEventListener(`blur`, () => {
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
-  });
+
 
   const MAX_SCALE = 100;
   const MIN_SCALE = 25;
@@ -192,6 +192,7 @@
     };
     document.addEventListener(`mousemove`, onMouseMove);
     document.addEventListener(`mouseup`, onMouseUp);
+
   });
 
 
