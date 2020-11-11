@@ -63,17 +63,17 @@
     bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
     document.body.classList.add(`modal-open`);
     bigPicture.classList.remove(`hidden`);
-    document.addEventListener(`keydown`, window.onWindowEscPress);
+    document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   };
 
   // 4.2
 
   const closeBigPictureBtn = document.querySelector(`.big-picture__cancel`);
-  window.gallery = {
-    closeBigPicture: () => {
-      bigPicture.classList.add(`hidden`);
-      document.body.classList.remove(`modal-open`);
-    }};
+
+  const closeBigPicture = () => {
+    bigPicture.classList.add(`hidden`);
+    document.body.classList.remove(`modal-open`);
+  };
   const openBigPicture = (data) =>{
     let miniture = document.querySelectorAll(`.picture`);
     miniture = Array.from(miniture);
@@ -83,7 +83,7 @@
       });
     });
   };
-  closeBigPictureBtn.addEventListener(`click`, window.closeBigPicture);
+  closeBigPictureBtn.addEventListener(`click`, closeBigPicture);
 
 
   let sortedArray = [];
@@ -149,7 +149,7 @@
     getCleanContent();
 
     while (sameArrays.random.length < RANDOM_NUMBER) {
-      let item = window.getRandomValue(sortedArray);
+      let item = window.random.getRandomValue(sortedArray);
       if (!sameArrays.random.includes(item)) {
         sameArrays.random.push(item);
       }
@@ -170,7 +170,13 @@
     openMiniaturies();
   };
 
-  window.backend.load(successHandler, window.errorHandler);
+  window.backend.load(successHandler, window.backend.errorHandler);
 
   galleryFilter.classList.remove(`img-filters--inactive`);
+
+
+  window.gallery = {
+    closeBigPicture,
+
+  };
 })();
