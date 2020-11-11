@@ -88,6 +88,8 @@
   const imgValue = document.querySelector(`.scale__control--value`);
 
   imgValue.value = `${MAX_SCALE}%`;
+
+
   const filteredPicture = document.querySelector(`.img-upload__preview img`);
   const changeImg = (value) => {
     filteredPicture.style.transform = `scale( ${value / MAX_SCALE})`;
@@ -191,7 +193,6 @@
     document.addEventListener(`mousemove`, onMouseMove);
     document.addEventListener(`mouseup`, onMouseUp);
   });
-
 
 
   filters.forEach((item) => {
