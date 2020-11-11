@@ -5,16 +5,17 @@
   const body = document.querySelector(`body`);
   const cancelWindow = document.querySelector(`#upload-cancel`);
 
-  window.onWindowEscPress = (evt) => {
+  const onWindowEscPress = (evt) => {
     if (evt.key === window.KEYS.ESCAPE) {
       closeWindow();
+      window.gallery.closeBigPicture();
     }
   };
 
   const openWindow = () => {
     uploadImg.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
-    document.addEventListener(`keydown`, window.onWindowEscPress);
+    document.addEventListener(`keydown`, onWindowEscPress);
   };
 
   const closeWindow = () => {
@@ -22,7 +23,7 @@
     uploadFile.value = ``;
 
     body.classList.remove(`modal-open`);
-    document.removeEventListener(`keydown`, window.onWindowEscPress);
+    document.removeEventListener(`keydown`, onWindowEscPress);
   };
   uploadFile.addEventListener(`change`, () => {
     openWindow();
@@ -30,4 +31,9 @@
   cancelWindow.addEventListener(`click`, () => {
     closeWindow();
   });
+
+  window.preview = {
+    onWindowEscPress,
+
+  };
 })();

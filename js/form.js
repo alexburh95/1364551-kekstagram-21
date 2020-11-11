@@ -20,6 +20,7 @@
   const hastagInput = document.querySelector(`.text__hashtags`);
   const regular = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
   const space = ` `;
+  const MAX_COMMENT_LENGTH = 140;
   const MIN_HASHTAG_LENGTH = 2;
   const MAX_HASHTAG_LENGTH = 20;
   const MAX_ARRAY_LENGTH = 5;
@@ -73,9 +74,30 @@
   hastagInput.addEventListener(`input`, hastagInputHandler);
 
   hastagInput.addEventListener(`focus`, () => {
-    document.removeEventListener(`keydown`, window.onWindowEscPress);
+    document.removeEventListener(`keydown`, window.preview.onWindowEscPress);
   });
   hastagInput.addEventListener(`blur`, () => {
-    document.addEventListener(`keydown`, window.onWindowEscPress);
+    document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   });
+
+  const comments = document.querySelector(`.text__description`);
+  const checkInputComment = () =>{
+    if (comments.value.length > MAX_COMMENT_LENGTH) {
+      comments.setCustomValidity(
+          `Максимальная длина комментария - 140 символов`
+      );
+    } else {
+      comments.setCustomValidity(``);
+    }
+
+  };
+  comments.addEventListener(`input`, checkInputComment);
+  comments.addEventListener(`focus`, () => {
+    document.removeEventListener(`keydown`, window.preview.onWindowEscPress);
+  });
+  comments.addEventListener(`blur`, () => {
+    document.addEventListener(`keydown`, window.preview.onWindowEscPress);
+  });
+
+
 })();

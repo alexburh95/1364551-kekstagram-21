@@ -35,11 +35,7 @@
     xhr.send();
   };
 
-  window.backend = {
-    load: backendLoad,
-  };
-
-  window.errorHandler = (errorMessage) => {
+  const errorHandler = (errorMessage) => {
     const node = document.createElement(`div`);
     node.style = `z-index: 100;
   margin: 0px auto;
@@ -64,5 +60,10 @@
 
     node.textContent = errorMessage;
     document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+
+  window.backend = {
+    errorHandler,
+    load: backendLoad,
   };
 })();
