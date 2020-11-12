@@ -62,8 +62,19 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
+  const backendSave = (data, onLoad, onError) => {
+    const URL = `https://21.javascript.pages.academy/kekstagram`;
+
+    const xhr = new XMLHttpRequest();
+    getFindings(xhr, onLoad, onError);
+
+    xhr.open(`POST`, URL);
+    xhr.send(data);
+  };
+
   window.backend = {
     errorHandler,
     load: backendLoad,
+    save: backendSave
   };
 })();

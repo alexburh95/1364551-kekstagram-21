@@ -1,5 +1,5 @@
-'use strict'
-;(function () {
+"use strict";
+(function () {
   const hastagInput = document.querySelector(`.text__hashtags`);
   const regular = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
   const space = ` `;
@@ -77,9 +77,7 @@
   });
   comments.addEventListener(`blur`, () => {
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
-
   });
-
 
   const MAX_SCALE = 100;
   const MIN_SCALE = 25;
@@ -90,7 +88,6 @@
   const imgValue = document.querySelector(`.scale__control--value`);
 
   imgValue.value = `${MAX_SCALE}%`;
-
 
   const filteredPicture = document.querySelector(`.img-upload__preview img`);
   const changeImg = (value) => {
@@ -113,8 +110,6 @@
     });
   };
   toggleImgValue();
-
-  // Filters
 
   const pin = document.querySelector(`.effect-level__pin`);
   const barContainer = document.querySelector(`.img-upload__effect-level`);
@@ -187,16 +182,14 @@
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
 
-      filterValue.value = getPinPosition(upEvt);
+      filterValue.value = Math.floor(getPinPosition(upEvt));
 
       document.removeEventListener(`mousemove`, onMouseMove);
       document.removeEventListener(`mouseup`, onMouseUp);
     };
     document.addEventListener(`mousemove`, onMouseMove);
     document.addEventListener(`mouseup`, onMouseUp);
-
   });
-
 
   filters.forEach((item) => {
     item.addEventListener(`click`, () => {
@@ -214,5 +207,101 @@
     });
   });
   barContainer.classList.add(`hidden`);
+  const resetTheFilters = () => {
+    imgValue.value = `${MAX_SCALE}%`;
+    filteredPicture.classList = ``;
+    pin.style.left = `${MAX_SCALE}%`;
+    depth.style.width = `${MAX_SCALE}%`;
+    filteredPicture.style.transform = `scale( ${MAX_SCALE / MAX_SCALE})`;
+    barContainer.classList.add(`hidden`);
+    clearFilters();
+  };
 
+  // 6.2
+  const submit = document.querySelector(`.img-upload__form`);
+
+  const resetinputValues = () => {
+    const radioInput = document.querySelectorAll(`input`);
+    radioInput.forEach((item) => {
+      if (item.value === `none`) {
+        item.checked = true;
+      }
+    });
+
+    const input = textInputs.querySelector(`input`);
+    const textarea = textInputs.querySelector(`textarea`);
+
+    textarea.value = ``;
+
+    input.value = ``;
+  };
+  const textInputs = document.querySelector(`.img-upload__text`);
+
+  const hideMessage = (e, msg) => {
+    const messageContainer = document.querySelectorAll(`.${msg}`);
+
+    const message = document.querySelectorAll(`.${msg}__inner`);
+
+    message.forEach((item, index) => {
+      if (!item.isEqualNode(e.target)) {
+        messageContainer[index].remove();
+      }
+    });
+  };
+
+  const closeMessage = (msg) => {
+    const messageContainer = document.querySelectorAll(`.${msg}`);
+
+    messageContainer.forEach((item) => {
+      item.remove();
+    });
+  };
+
+  const hideSubmitMessage = () => {
+    closeMessage(`error`);
+    closeMessage(`success`);
+  };
+
+  const showMessage = (msg) => {
+    const main = document.querySelector(`main`);
+    const template = document
+      .querySelector(`#${msg}`)
+      .content.firstElementChild.cloneNode(true);
+
+    main.appendChild(template);
+
+    const hiding = (e) => {
+      hideMessage(e, msg);
+    };
+
+    document.addEventListener(`click`, hiding);
+    document.addEventListener(`keydown`, window.preview.onWindowEscPress);
+  };
+
+  const sending = (msg) => {
+    window.preview.closeWindow();
+    showMessage(msg);
+  };
+  const succsessSubmitHandler = () => {
+    sending(`success`);
+    resetinputValues();
+  };
+  const errorSubmitHadler = () => {
+    sending(`error`);
+  };
+  const submitHandler = (evt) => {
+    evt.preventDefault();
+    window.backend.save(
+        new FormData(submit),
+        succsessSubmitHandler,
+        errorSubmitHadler
+    );
+  };
+
+  submit.addEventListener(`submit`, submitHandler);
+
+  window.form = {
+    resetTheFilters,
+    hideSubmitMessage,
+  };
 })();
