@@ -9,6 +9,7 @@
     if (evt.key === window.KEYS.ESCAPE) {
       closeWindow();
       window.gallery.closeBigPicture();
+      window.form.hideSubmitMessage();
     }
   };
 
@@ -16,6 +17,7 @@
     uploadImg.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
     document.addEventListener(`keydown`, onWindowEscPress);
+    window.form.resetTheFilters();
   };
 
   const closeWindow = () => {
@@ -30,10 +32,12 @@
   });
   cancelWindow.addEventListener(`click`, () => {
     closeWindow();
+
   });
 
   window.preview = {
     onWindowEscPress,
+    closeWindow,
 
   };
 })();
