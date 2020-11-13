@@ -81,6 +81,7 @@
 
   const MAX_SCALE = 100;
   const MIN_SCALE = 25;
+  const STOCK_SCALE = 1;
 
   const smallerButton = document.querySelector(`.scale__control--smaller`);
   const biggerButton = document.querySelector(`.scale__control--bigger`);
@@ -212,7 +213,7 @@
     filteredPicture.classList = ``;
     pin.style.left = `${MAX_SCALE}%`;
     depth.style.width = `${MAX_SCALE}%`;
-    filteredPicture.style.transform = `scale( ${MAX_SCALE / MAX_SCALE})`;
+    filteredPicture.style.transform = `scale( ${STOCK_SCALE})`;
     barContainer.classList.add(`hidden`);
     clearFilters();
   };
@@ -221,8 +222,8 @@
   const submit = document.querySelector(`.img-upload__form`);
 
   const resetinputValues = () => {
-    const radioInput = document.querySelectorAll(`input`);
-    radioInput.forEach((item) => {
+    const radioInputs = document.querySelectorAll(`input[type=radio]`);
+    radioInputs.forEach((item) => {
       if (item.value === `none`) {
         item.checked = true;
       }
@@ -237,14 +238,14 @@
   };
   const textInputs = document.querySelector(`.img-upload__text`);
 
-  const hideMessage = (e, msg) => {
-    const messageContainer = document.querySelectorAll(`.${msg}`);
+  const hideMessage = (evt, msg) => {
+    const messageContainers = document.querySelectorAll(`.${msg}`);
 
-    const message = document.querySelectorAll(`.${msg}__inner`);
+    const messages = document.querySelectorAll(`.${msg}__inner`);
 
-    message.forEach((item, index) => {
-      if (!item.isEqualNode(e.target)) {
-        messageContainer[index].remove();
+    messages.forEach((item, index) => {
+      if (!item.isEqualNode(evt.target)) {
+        messageContainers[index].remove();
       }
     });
   };
@@ -270,8 +271,8 @@
 
     main.appendChild(template);
 
-    const hiding = (e) => {
-      hideMessage(e, msg);
+    const hiding = (evt) => {
+      hideMessage(evt, msg);
     };
 
     document.addEventListener(`click`, hiding);
