@@ -1,5 +1,5 @@
-'use strict'
-;(function () {
+"use strict";
+(function () {
   const COMENT_IMG_SIZE = 35;
 
   const bigPicture = document.querySelector(`.big-picture`);
@@ -7,84 +7,56 @@
   const galleryFilter = document.querySelector(`.img-filters`);
   const similarListElement = document.querySelector(`.pictures`);
   const similarPictureTemplate = document
-        .querySelector(`#picture`)
-        .content.querySelector(`.picture`);
+    .querySelector(`#picture`)
+    .content.querySelector(`.picture`);
 
   const renderComments = (object) => {
     const commentElement = similarPictureTemplate.cloneNode(true);
     commentElement.querySelector(`.picture__img`).src = object.url;
 
-    commentElement.querySelector(`.picture__likes`).textContent =
-            object.likes;
+    commentElement.querySelector(`.picture__likes`).textContent = object.likes;
     commentElement.querySelector(`.picture__comments`).textContent =
-            object.comments.length;
+      object.comments.length;
 
     return commentElement;
   };
-
-
-  // 3.2
 
   const makeBigPicture = (object) => {
     bigPicture.querySelector(`.big-picture__img img`).src = object.url;
     bigPicture.querySelector(`.likes-count`).textContent = object.likes;
     bigPicture.querySelector(`.comments-count`).textContent =
-            object.comments.length;
+      object.comments.length;
     bigPicture.querySelector(`.social__caption`).textContent =
-            object.description;
+      object.description;
 
-    const comments = object.comments;
-
-    const commentsContainer = bigPicture.querySelector(`.social__comments`);
-    let liFragment = document.createDocumentFragment();
     commentsContainer.innerHTML = ``;
-    comments.forEach((comment) => {
-      const li = document.createElement(`li`);
-      li.classList.add(`social__comment`);
-      const avatar = document.createElement(`img`);
-      avatar.classList.add(`social__picture`);
-      avatar.src = comment.avatar;
-      avatar.alt = comment.name;
-      avatar.width = COMENT_IMG_SIZE;
-      avatar.height = COMENT_IMG_SIZE;
-      const commentText = document.createElement(`p`);
-      commentText.classList.add(`social__text`);
-      commentText.textContent = comment.message;
-      li.appendChild(avatar);
-      li.appendChild(commentText);
-      liFragment.appendChild(li);
-    });
 
-    commentsContainer.appendChild(liFragment);
+    bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
 
-    bigPicture
-            .querySelector(`.social__comment-count`)
-            .classList.add(`hidden`);
-    bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
     document.body.classList.add(`modal-open`);
     bigPicture.classList.remove(`hidden`);
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   };
 
-  // 4.2
-
   const closeBigPictureBtn = document.querySelector(`.big-picture__cancel`);
+  let comments = [];
 
   const closeBigPicture = () => {
     bigPicture.classList.add(`hidden`);
     document.body.classList.remove(`modal-open`);
   };
-  const openBigPicture = (data) =>{
-    let miniture = document.querySelectorAll(`.picture`);
-    miniture = Array.from(miniture);
-    miniture.forEach((item, index) => {
+  const openBigPicture = (data) => {
+    let minitures = document.querySelectorAll(`.picture`);
+    minitures = Array.from(minitures);
+    minitures.forEach((item, index) => {
       item.addEventListener(`click`, () => {
         makeBigPicture(data[index]);
+        comments = data[index].comments;
+        renderNewComments(comments);
       });
     });
   };
   closeBigPictureBtn.addEventListener(`click`, closeBigPicture);
-
 
   let sortedArray = [];
   const random = document.querySelector(`#filter-random`);
@@ -113,10 +85,10 @@
     random: [],
   };
 
-  const slashImages = function () {
+  const slashImages = () => {
     getSetting(sortedArray);
   };
-  const openMiniaturies = ()=>{
+  const openMiniaturies = () => {
     openBigPicture(sortedArray);
   };
   const mostPopularHandler = window.debounce(() => {
@@ -128,7 +100,7 @@
     sortedArray = popular;
 
     slashImages();
-    openMiniaturies();
+    openMiniaturies(sortedArray);
   });
 
   mostPopular.addEventListener(`click`, mostPopularHandler);
@@ -138,7 +110,7 @@
 
     sortedArray = sameArrays.all;
     slashImages();
-    openMiniaturies();
+    openMiniaturies(sortedArray);
   });
 
   defaults.addEventListener(`click`, defaultHandler);
@@ -158,7 +130,7 @@
     sortedArray = sameArrays.random;
 
     slashImages();
-    openMiniaturies();
+    openMiniaturies(sortedArray);
   });
 
   random.addEventListener(`click`, randomHandler);
@@ -167,16 +139,63 @@
     sortedArray = data;
     sameArrays.all = data;
     slashImages();
-    openMiniaturies();
+    openMiniaturies(sortedArray);
   };
 
   window.backend.load(successHandler, window.backend.errorHandler);
 
   galleryFilter.classList.remove(`img-filters--inactive`);
 
+  const COMMENTS_PER_TIME = 5;
+  const commentsContainer = bigPicture.querySelector(`.social__comments`);
+  const commentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
+
+  const renderComment = (comment) => {
+    const liFragment = document.createDocumentFragment();
+    const li = document.createElement(`li`);
+    li.classList.add(`social__comment`);
+    const avatar = document.createElement(`img`);
+    avatar.classList.add(`social__picture`);
+    avatar.src = comment.avatar;
+    avatar.alt = comment.name;
+    avatar.width = COMENT_IMG_SIZE;
+    avatar.height = COMENT_IMG_SIZE;
+    const commentText = document.createElement(`p`);
+    commentText.classList.add(`social__text`);
+    commentText.textContent = comment.message;
+    li.appendChild(avatar);
+    li.appendChild(commentText);
+    liFragment.appendChild(li);
+    return liFragment;
+  };
+
+  const renderNewComments = (commentsList) => {
+    commentsLoadBtn.classList.remove(`hidden`);
+    const rendered = commentsContainer.childNodes.length;
+    const commentsCount = commentsList.length;
+
+    let toRender = [];
+    toRender = commentsList.slice(rendered, commentsCount);
+
+    if (toRender.length <= COMMENTS_PER_TIME) {
+      toRender.forEach((comment) => {
+        commentsContainer.appendChild(renderComment(comment));
+      });
+      commentsLoadBtn.classList.add(`hidden`);
+    }
+    if (toRender.length > COMMENTS_PER_TIME) {
+      toRender = toRender.slice(0, COMMENTS_PER_TIME);
+      toRender.forEach((comment) => {
+        commentsContainer.appendChild(renderComment(comment));
+      });
+    }
+  };
+
+  commentsLoadBtn.addEventListener(`click`, () => {
+    renderNewComments(comments);
+  });
 
   window.gallery = {
     closeBigPicture,
-
   };
 })();
