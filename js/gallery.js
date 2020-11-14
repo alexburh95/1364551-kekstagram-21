@@ -151,7 +151,7 @@
   const commentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
 
   const renderComment = (comment) => {
-    let liFragment = document.createDocumentFragment();
+    const liFragment = document.createDocumentFragment();
     const li = document.createElement(`li`);
     li.classList.add(`social__comment`);
     const avatar = document.createElement(`img`);
@@ -184,7 +184,7 @@
       commentsLoadBtn.classList.add(`hidden`);
     }
     if (toRender.length > COMMENTS_PER_TIME) {
-      toRender = toRender.slice(0, 5);
+      toRender = toRender.slice(0, COMMENTS_PER_TIME);
       toRender.forEach((comment) => {
         commentsContainer.appendChild(renderComment(comment));
       });
