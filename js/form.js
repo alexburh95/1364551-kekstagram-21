@@ -1,14 +1,20 @@
 "use strict";
 (function () {
-  const hastagInput = document.querySelector(`.text__hashtags`);
-  const regular = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
-  const space = ` `;
+
+  const MAX_SCALE = 100;
+  const MIN_SCALE = 25;
+  const STOCK_SCALE = 1;
+  const REGULAR = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
+  const SPACE = ` `;
   const MAX_COMMENT_LENGTH = 140;
   const MIN_HASHTAG_LENGTH = 2;
   const MAX_HASHTAG_LENGTH = 20;
   const MAX_ARRAY_LENGTH = 5;
-  const hasDuplicates = (arr) =>
-    arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
+  const hastagInput = document.querySelector(`.text__hashtags`);
+  const hasDuplicates = (array) =>
+    array.some((item) => {
+      return array.indexOf(item) !== array.lastIndexOf(item);
+    });
   const checkInput = (array) => {
     if (array.length > MAX_ARRAY_LENGTH) {
       hastagInput.setCustomValidity(`Максимальное количество хештегов: 5`);
@@ -30,7 +36,7 @@
             `Удалите лишние ${valueLength - MAX_HASHTAG_LENGTH} симв.`
         );
         break;
-      } else if (regular.test(element) === false) {
+      } else if (REGULAR.test(element) === false) {
         hastagInput.setCustomValidity(
             `Ошибка заполнения. Можно использовать только буквы и цифры`
         );
@@ -49,8 +55,8 @@
     hastagInput.reportValidity();
   };
   const hastagInputHandler = () => {
-    const inputArray = hastagInput.value.toLowerCase().split(space);
-    checkInput(inputArray);
+    const inputs = hastagInput.value.toLowerCase().split(SPACE);
+    checkInput(inputs);
   };
   hastagInput.addEventListener(`input`, hastagInputHandler);
 
@@ -79,9 +85,6 @@
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   });
 
-  const MAX_SCALE = 100;
-  const MIN_SCALE = 25;
-  const STOCK_SCALE = 1;
 
   const smallerButton = document.querySelector(`.scale__control--smaller`);
   const biggerButton = document.querySelector(`.scale__control--bigger`);
@@ -124,30 +127,30 @@
   };
   const arrayOfFilters = {
     none: () => {},
-    chrome: (prop) => {
-      let value = Math.round(getPinPosition(prop)) / 100;
+    chrome: (propeties) => {
+      let value = Math.round(getPinPosition(propeties)) / 100;
       setFilter(`grayscale`, value);
     },
-    sepia: (prop) => {
-      let value = Math.round(getPinPosition(prop)) / 100;
+    sepia: (propeties) => {
+      let value = Math.round(getPinPosition(propeties)) / 100;
       setFilter(`sepia`, value);
     },
-    marvin: (prop) => {
-      setFilter(`invert`, `${getPinPosition(prop)}%`);
+    marvin: (propeties) => {
+      setFilter(`invert`, `${getPinPosition(propeties)}%`);
     },
-    phobos: (prop) => {
-      setFilter(`blur`, `${(getPinPosition(prop) * 3) / 100}px`);
+    phobos: (propeties) => {
+      setFilter(`blur`, `${(getPinPosition(propeties) * 3) / 100}px`);
     },
-    heat: (prop) => {
-      setFilter(`brightness`, `${(getPinPosition(prop) * 2) / 100 + 1}`);
+    heat: (propeties) => {
+      setFilter(`brightness`, `${(getPinPosition(propeties) * 2) / 100 + 1}`);
     },
   };
 
-  const getPinPosition = (arg) => {
+  const getPinPosition = (argument) => {
     const barLeft = bar.getBoundingClientRect()[`left`];
     const barWidth = bar.clientWidth;
 
-    const pinLeft = arg.pageX - barLeft;
+    const pinLeft = argument.pageX - barLeft;
 
     let offset;
 
@@ -218,7 +221,6 @@
     clearFilters();
   };
 
-  // 6.2
   const submit = document.querySelector(`.img-upload__form`);
 
   const resetinputValues = () => {
@@ -238,10 +240,10 @@
   };
   const textInputs = document.querySelector(`.img-upload__text`);
 
-  const hideMessage = (evt, msg) => {
-    const messageContainers = document.querySelectorAll(`.${msg}`);
+  const hideMessage = (evt, message) => {
+    const messageContainers = document.querySelectorAll(`.${message}`);
 
-    const messages = document.querySelectorAll(`.${msg}__inner`);
+    const messages = document.querySelectorAll(`.${message}__inner`);
 
     messages.forEach((item, index) => {
       if (!item.isEqualNode(evt.target)) {
@@ -250,8 +252,8 @@
     });
   };
 
-  const closeMessage = (msg) => {
-    const messageContainer = document.querySelectorAll(`.${msg}`);
+  const closeMessage = (message) => {
+    const messageContainer = document.querySelectorAll(`.${message}`);
 
     messageContainer.forEach((item) => {
       item.remove();
@@ -263,25 +265,25 @@
     closeMessage(`success`);
   };
 
-  const showMessage = (msg) => {
+  const showMessage = (message) => {
     const main = document.querySelector(`main`);
     const template = document
-      .querySelector(`#${msg}`)
+      .querySelector(`#${message}`)
       .content.firstElementChild.cloneNode(true);
 
     main.appendChild(template);
 
     const hiding = (evt) => {
-      hideMessage(evt, msg);
+      hideMessage(evt, message);
     };
 
     document.addEventListener(`click`, hiding);
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   };
 
-  const sending = (msg) => {
+  const sending = (message) => {
     window.preview.closeWindow();
-    showMessage(msg);
+    showMessage(message);
   };
   const succsessSubmitHandler = () => {
     sending(`success`);

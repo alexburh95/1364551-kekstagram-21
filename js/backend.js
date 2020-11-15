@@ -1,6 +1,6 @@
 "use strict";
 (function () {
-  const StatusCode = {
+  const STATUS_CODE = {
     OK: 200,
   };
   const TIMEOUT_IN_MS = 10000;
@@ -8,18 +8,18 @@
     element.responseType = `json`;
 
     element.addEventListener(`load`, () => {
-      if (element.status === StatusCode.OK) {
+      if (element.status === STATUS_CODE.OK) {
         sucsess(element.response);
       } else {
         lost(`Статус ответа: ${element.status} ${element.statusText}`);
       }
     });
     element.addEventListener(`error`, () => {
-      lost(`${window.SORRY} Произошла ошибка соединения`);
+      lost(`${window.data.SORRY} Произошла ошибка соединения`);
     });
     element.addEventListener(`timeout`, () => {
       lost(
-          `${window.SORRY} Запрос не успел выполниться за ${element.timeout} мс`
+          `${window.data.SORRY} Запрос не успел выполниться за ${element.timeout} мс`
       );
     });
 

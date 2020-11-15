@@ -6,7 +6,7 @@
   const cancelWindow = document.querySelector(`#upload-cancel`);
 
   const onWindowEscPress = (evt) => {
-    if (evt.key === window.KEYS.ESCAPE) {
+    if (evt.key === window.data.KEYS.ESCAPE) {
       closeWindow();
       window.gallery.closeBigPicture();
       window.form.hideSubmitMessage();

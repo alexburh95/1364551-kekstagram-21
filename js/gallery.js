@@ -1,7 +1,7 @@
 "use strict";
 (function () {
   const COMENT_IMG_SIZE = 35;
-
+  const COMMENTS_PER_TIME = 5;
   const bigPicture = document.querySelector(`.big-picture`);
   const RANDOM_NUMBER = 10;
   const galleryFilter = document.querySelector(`.img-filters`);
@@ -9,6 +9,11 @@
   const similarPictureTemplate = document
     .querySelector(`#picture`)
     .content.querySelector(`.picture`);
+
+  const openFiltersSection = ()=>{
+    galleryFilter.classList.remove(`img-filters--inactive`);
+  };
+
 
   const renderComments = (object) => {
     const commentElement = similarPictureTemplate.cloneNode(true);
@@ -45,7 +50,7 @@
     bigPicture.classList.add(`hidden`);
     document.body.classList.remove(`modal-open`);
   };
-  const openBigPicture = (data) => {
+  const openBigPicture = window.debounce((data) => {
     let minitures = document.querySelectorAll(`.picture`);
     minitures = Array.from(minitures);
     minitures.forEach((item, index) => {
@@ -55,10 +60,10 @@
         renderNewComments(comments);
       });
     });
-  };
+  });
   closeBigPictureBtn.addEventListener(`click`, closeBigPicture);
 
-  let sortedArray = [];
+  let sortedImages = [];
   const random = document.querySelector(`#filter-random`);
   const defaults = document.querySelector(`#filter-default`);
   const mostPopular = document.querySelector(`#filter-discussed`);
@@ -71,82 +76,89 @@
       similarListElement.removeChild(item);
     });
   };
-  const getSetting = (array) => {
-    sortedArray = [...array];
+  const slashImages = window.debounce((array) => {
+    sortedImages = [...array];
 
     array.forEach((item) => {
       fragment.appendChild(renderComments(item));
     });
 
     similarListElement.appendChild(fragment);
-  };
-  const sameArrays = {
-    all: [],
-    random: [],
+  });
+  const filteredImages = {
+    defaults: [],
+    randoms: [],
   };
 
-  const slashImages = () => {
-    getSetting(sortedArray);
+  const clearActive = () => {
+    mostPopular.classList.remove(`img-filters__button--active`);
+    defaults.classList.remove(`img-filters__button--active`);
+    random.classList.remove(`img-filters__button--active`);
   };
-  const openMiniaturies = () => {
-    openBigPicture(sortedArray);
-  };
-  const mostPopularHandler = window.debounce(() => {
+
+  const mostPopularHandler = () => {
     getCleanContent();
-    const popular = [...sameArrays.all];
-    popular.sort((a, b) => {
+    const popularImages = [...filteredImages.defaults];
+    popularImages.sort((a, b) => {
       return b.comments.length - a.comments.length;
     });
-    sortedArray = popular;
+    sortedImages = popularImages;
 
-    slashImages();
-    openMiniaturies(sortedArray);
-  });
+    slashImages(sortedImages);
+    openBigPicture(sortedImages);
+
+    clearActive();
+    mostPopular.classList.add(`img-filters__button--active`);
+  };
 
   mostPopular.addEventListener(`click`, mostPopularHandler);
 
-  const defaultHandler = window.debounce(() => {
+  const defaultHandler = () => {
     getCleanContent();
 
-    sortedArray = sameArrays.all;
-    slashImages();
-    openMiniaturies(sortedArray);
-  });
+    sortedImages = filteredImages.defaults;
+    window.debounce(slashImages(sortedImages));
+    openBigPicture(sortedImages);
+    clearActive();
+    defaults.classList.add(`img-filters__button--active`);
+  };
 
   defaults.addEventListener(`click`, defaultHandler);
 
-  const randomHandler = window.debounce(() => {
-    sortedArray = sameArrays.all;
-    sameArrays.random = [];
+  const randomHandler = () => {
+    sortedImages = filteredImages.defaults;
+    filteredImages.randoms = [];
     getCleanContent();
 
-    while (sameArrays.random.length < RANDOM_NUMBER) {
-      let item = window.random.getRandomValue(sortedArray);
-      if (!sameArrays.random.includes(item)) {
-        sameArrays.random.push(item);
+    while (filteredImages.randoms.length < RANDOM_NUMBER) {
+      let item = window.random.getRandomValue(sortedImages);
+      if (!filteredImages.randoms.includes(item)) {
+        filteredImages.randoms.push(item);
       }
     }
 
-    sortedArray = sameArrays.random;
+    sortedImages = filteredImages.randoms;
 
-    slashImages();
-    openMiniaturies(sortedArray);
-  });
+    slashImages(sortedImages);
+    openBigPicture(sortedImages);
+
+    clearActive();
+    random.classList.add(`img-filters__button--active`);
+  };
 
   random.addEventListener(`click`, randomHandler);
 
-  const successHandler = function (data) {
-    sortedArray = data;
-    sameArrays.all = data;
-    slashImages();
-    openMiniaturies(sortedArray);
+  const successHandler = (data) => {
+    sortedImages = data;
+    filteredImages.defaults = data;
+    slashImages(sortedImages);
+    openBigPicture(sortedImages);
+    openFiltersSection();
   };
 
   window.backend.load(successHandler, window.backend.errorHandler);
 
-  galleryFilter.classList.remove(`img-filters--inactive`);
 
-  const COMMENTS_PER_TIME = 5;
   const commentsContainer = bigPicture.querySelector(`.social__comments`);
   const commentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
 
@@ -174,18 +186,18 @@
     const rendered = commentsContainer.childNodes.length;
     const commentsCount = commentsList.length;
 
-    let toRender = [];
-    toRender = commentsList.slice(rendered, commentsCount);
+    let remainingComments = [];
+    remainingComments = commentsList.slice(rendered, commentsCount);
 
-    if (toRender.length <= COMMENTS_PER_TIME) {
-      toRender.forEach((comment) => {
+    if (remainingComments.length <= COMMENTS_PER_TIME) {
+      remainingComments.forEach((comment) => {
         commentsContainer.appendChild(renderComment(comment));
       });
       commentsLoadBtn.classList.add(`hidden`);
     }
-    if (toRender.length > COMMENTS_PER_TIME) {
-      toRender = toRender.slice(0, COMMENTS_PER_TIME);
-      toRender.forEach((comment) => {
+    if (remainingComments.length > COMMENTS_PER_TIME) {
+      remainingComments = remainingComments.slice(0, COMMENTS_PER_TIME);
+      remainingComments.forEach((comment) => {
         commentsContainer.appendChild(renderComment(comment));
       });
     }

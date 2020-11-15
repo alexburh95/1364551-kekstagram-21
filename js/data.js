@@ -1,9 +1,14 @@
 "use strict";
 (function () {
-  window.KEYS = {
+  const KEYS = {
     ENTER: `Enter`,
     ESCAPE: `Escape`,
   };
 
-  window.SORRY = `ИЗВИНИТЕ,`;
+  const SORRY = `ИЗВИНИТЕ,`;
+
+  window.data = {
+    KEYS,
+    SORRY,
+  };
 })();
