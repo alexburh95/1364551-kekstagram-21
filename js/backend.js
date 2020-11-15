@@ -75,6 +75,6 @@
   window.backend = {
     errorHandler,
     load: backendLoad,
-    save: backendSave
+    save: backendSave,
   };
 })();

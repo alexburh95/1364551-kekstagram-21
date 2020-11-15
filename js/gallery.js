@@ -10,10 +10,9 @@
     .querySelector(`#picture`)
     .content.querySelector(`.picture`);
 
-  const openFiltersSection = ()=>{
+  const openFiltersSection = () => {
     galleryFilter.classList.remove(`img-filters--inactive`);
   };
-
 
   const renderComments = (object) => {
     const commentElement = similarPictureTemplate.cloneNode(true);
@@ -157,7 +156,6 @@
   };
 
   window.backend.load(successHandler, window.backend.errorHandler);
-
 
   const commentsContainer = bigPicture.querySelector(`.social__comments`);
   const commentsLoadBtn = bigPicture.querySelector(`.comments-loader`);

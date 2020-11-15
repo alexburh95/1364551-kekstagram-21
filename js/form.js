@@ -1,6 +1,5 @@
 "use strict";
 (function () {
-
   const MAX_SCALE = 100;
   const MIN_SCALE = 25;
   const STOCK_SCALE = 1;
@@ -84,7 +83,6 @@
   comments.addEventListener(`blur`, () => {
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   });
-
 
   const smallerButton = document.querySelector(`.scale__control--smaller`);
   const biggerButton = document.querySelector(`.scale__control--bigger`);
