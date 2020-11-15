@@ -206,7 +206,6 @@
   commentsLoadBtn.addEventListener(`click`, () => {
     renderNewComments(comments);
   });
-
   window.gallery = {
     closeBigPicture,
   };
