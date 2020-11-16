@@ -1,7 +1,16 @@
 "use strict";
 (function () {
+  const FILTERS = {
+    GRAYSCALE: `grayscale`,
+    SEPIA: `sepia`,
+    INVERT: `invert`,
+    BLUR: `blur`,
+    BRIGHTNESS: `brightness`
+
+  };
   const MAX_SCALE = 100;
   const MIN_SCALE = 25;
+  const SCALE_FACTOR = 25;
   const STOCK_SCALE = 1;
   const REGULAR = /^#[a-zA-Z0-9А-ЯЁа-яё]*$/;
   const SPACE = ` `;
@@ -84,34 +93,51 @@
     document.addEventListener(`keydown`, window.preview.onWindowEscPress);
   });
 
-  const smallerButton = document.querySelector(`.scale__control--smaller`);
-  const biggerButton = document.querySelector(`.scale__control--bigger`);
-
+  const buttons = {
+    smaller: document.querySelector(`.scale__control--smaller`),
+    bigger: document.querySelector(`.scale__control--bigger`)
+  };
+  const filteredPicture = document.querySelector(`.img-upload__preview img`);
   const imgValue = document.querySelector(`.scale__control--value`);
 
-  imgValue.value = `${MAX_SCALE}%`;
+  const changeScale = (scale) => {
+    imgValue.value = `${scale}%`;
+    filteredPicture.style.transform = `scale(${scale / MAX_SCALE})`;
+  };
 
-  const filteredPicture = document.querySelector(`.img-upload__preview img`);
-  const changeImg = (value) => {
-    filteredPicture.style.transform = `scale( ${value / MAX_SCALE})`;
-    imgValue.value = `${value}%`;
-  };
-  const toggleImgValue = () => {
-    let element = imgValue.value.split(`%`)[0];
-    smallerButton.addEventListener(`click`, () => {
-      if (element > MIN_SCALE && element <= MAX_SCALE) {
-        element -= MIN_SCALE;
-        changeImg(element);
-      }
-    });
-    biggerButton.addEventListener(`click`, () => {
-      if (element >= MIN_SCALE && element < MAX_SCALE) {
-        element += MIN_SCALE;
-        changeImg(element);
-      }
-    });
-  };
-  toggleImgValue();
+  changeScale(MAX_SCALE);
+
+  buttons.smaller.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    const scaleValue = parseInt(imgValue.value, 10);
+
+    const scaleDifference = scaleValue - SCALE_FACTOR;
+
+    if (scaleDifference >= MIN_SCALE) {
+      changeScale(scaleDifference);
+    } else {
+      buttons.smaller.setAttribute(`disabled`, `true`);
+    }
+
+    buttons.bigger.removeAttribute(`disabled`);
+  });
+
+  buttons.bigger.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    const scaleValue = parseInt(imgValue.value, 10);
+
+    const scaleRise = scaleValue + SCALE_FACTOR;
+
+    if (scaleRise <= MAX_SCALE) {
+      changeScale(scaleRise);
+    } else {
+      buttons.bigger.setAttribute(`disabled`, `true`);
+    }
+
+    buttons.smaller.removeAttribute(`disabled`);
+  });
 
   const pin = document.querySelector(`.effect-level__pin`);
   const barContainer = document.querySelector(`.img-upload__effect-level`);
@@ -127,20 +153,20 @@
     none: () => {},
     chrome: (propeties) => {
       let value = Math.round(getPinPosition(propeties)) / 100;
-      setFilter(`grayscale`, value);
+      setFilter(FILTERS.GRAYSCALE, value);
     },
     sepia: (propeties) => {
       let value = Math.round(getPinPosition(propeties)) / 100;
-      setFilter(`sepia`, value);
+      setFilter(FILTERS.SEPIA, value);
     },
     marvin: (propeties) => {
-      setFilter(`invert`, `${getPinPosition(propeties)}%`);
+      setFilter(FILTERS.INVERT, `${getPinPosition(propeties)}%`);
     },
     phobos: (propeties) => {
-      setFilter(`blur`, `${(getPinPosition(propeties) * 3) / 100}px`);
+      setFilter(FILTERS.BLUR, `${(getPinPosition(propeties) * 3) / 100}px`);
     },
     heat: (propeties) => {
-      setFilter(`brightness`, `${(getPinPosition(propeties) * 2) / 100 + 1}`);
+      setFilter(FILTERS.BRIGHTNESS, `${(getPinPosition(propeties) * 2) / 100 + 1}`);
     },
   };
 
@@ -197,7 +223,7 @@
     item.addEventListener(`click`, () => {
       clearFilters();
       barContainer.classList.remove(`hidden`);
-      filteredPicture.classList = ``;
+      filteredPicture.className = ``;
 
       if (item.value === `none`) {
         barContainer.classList.add(`hidden`);
@@ -211,7 +237,7 @@
   barContainer.classList.add(`hidden`);
   const resetTheFilters = () => {
     imgValue.value = `${MAX_SCALE}%`;
-    filteredPicture.classList = ``;
+    filteredPicture.className = ``;
     pin.style.left = `${MAX_SCALE}%`;
     depth.style.width = `${MAX_SCALE}%`;
     filteredPicture.style.transform = `scale( ${STOCK_SCALE})`;
@@ -232,8 +258,8 @@
     const input = textInputs.querySelector(`input`);
     const textarea = textInputs.querySelector(`textarea`);
 
+    changeScale(MAX_SCALE);
     textarea.value = ``;
-
     input.value = ``;
   };
   const textInputs = document.querySelector(`.img-upload__text`);

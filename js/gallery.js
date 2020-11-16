@@ -1,3 +1,4 @@
+
 "use strict";
 (function () {
   const COMENT_IMG_SIZE = 35;
@@ -19,8 +20,7 @@
     commentElement.querySelector(`.picture__img`).src = object.url;
 
     commentElement.querySelector(`.picture__likes`).textContent = object.likes;
-    commentElement.querySelector(`.picture__comments`).textContent =
-      object.comments.length;
+    commentElement.querySelector(`.picture__comments`).textContent = object.comments.length;
 
     return commentElement;
   };

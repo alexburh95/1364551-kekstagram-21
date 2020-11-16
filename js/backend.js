@@ -1,5 +1,10 @@
 "use strict";
 (function () {
+
+  const METHODS = {
+    POST: `POST`,
+    GET: `GET`
+  };
   const STATUS_CODE = {
     OK: 200,
   };
@@ -31,7 +36,7 @@
     const xhr = new XMLHttpRequest();
     getFindings(xhr, onLoad, onError);
 
-    xhr.open(`GET`, URL);
+    xhr.open(METHODS.GET, URL);
     xhr.send();
   };
 
@@ -68,7 +73,7 @@
     const xhr = new XMLHttpRequest();
     getFindings(xhr, onLoad, onError);
 
-    xhr.open(`POST`, URL);
+    xhr.open(METHODS.POST, URL);
     xhr.send(data);
   };
 

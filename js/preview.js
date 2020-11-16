@@ -14,10 +14,11 @@
   };
 
   const openWindow = () => {
+    window.form.resetTheFilters();
     uploadImg.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
     document.addEventListener(`keydown`, onWindowEscPress);
-    window.form.resetTheFilters();
+
   };
 
   const closeWindow = () => {
