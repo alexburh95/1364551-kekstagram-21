@@ -31,7 +31,7 @@
     element.timeout = TIMEOUT_IN_MS;
   };
   const backendLoad = (onLoad, onError) => {
-    const URL = ` https://21.javascript.pages.academy/kekstagram/data`;
+    const URL = ` https://23.javascript.pages.academy/kekstagram/data`;
 
     const xhr = new XMLHttpRequest();
     getFindings(xhr, onLoad, onError);
